@@ -17,9 +17,6 @@ class Statistics {
         let losses = trades.filter(trade => trade.outcome === 'SL').length;
         let breakevens = trades.filter(trade => trade.outcome === 'BE').length;
 
-        // Calculate RR (3 for wins, -1 for losses)
-        const rr = (wins * 3) + (losses * -1);
-
         // Consider potential outcomes for BE trades
         if (considerPotentialOutcome) {
             const beTradesWithPotential = trades.filter(trade => 
@@ -32,6 +29,9 @@ class Statistics {
                 breakevens--;
             });
         }
+
+        // Calculate RR (3 for wins, -1 for losses) after potential outcomes are considered
+        const rr = (wins * 3) + (losses * -1);
 
         // Calculate average trade time
         const tradeTimes = trades.map(trade => {
