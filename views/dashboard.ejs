@@ -1,0 +1,181 @@
+<%- include('partials/header') %>
+
+<div class="dashboard">
+    <section class="stats-panel">
+        <h2>Statistics</h2>
+        <div class="trade-counts">
+            <div class="count-box">
+                <span class="count-label">Total Trades:</span>
+                <span class="count-value"><%= stats.totalTrades %></span>
+            </div>
+            <div class="count-box">
+                <span class="count-label">Total Wins:</span>
+                <span class="count-value"><%= stats.totalWins %></span>
+            </div>
+            <div class="count-box">
+                <span class="count-label">Total Losses:</span>
+                <span class="count-value"><%= stats.totalLosses %></span>
+            </div>
+            <div class="count-box">
+                <span class="count-label">Total Breakevens:</span>
+                <span class="count-value"><%= stats.totalBreakevens %></span>
+            </div>
+        </div>
+        
+        <div class="breakeven-toggle">
+            <label>
+                <input type="checkbox" id="includeBreakeven" 
+                    <%= filters.includeBreakeven === 'true' ? 'checked' : '' %>>
+                Include BE as TP
+            </label>
+            <label>
+                <input type="checkbox" id="considerPotentialOutcome" 
+                    <%= filters.considerPotentialOutcome === 'true' ? 'checked' : '' %>>
+                Consider BE Potential Outcomes
+            </label>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-box">
+                <h3>Win Rate</h3>
+                <p><%= stats.winRate %>%</p>
+            </div>
+            <div class="stat-box">
+                <h3>Loss Rate</h3>
+                <p><%= stats.lossRate %>%</p>
+            </div>
+            <div class="stat-box">
+                <h3>Breakeven Rate</h3>
+                <p><%= stats.breakevenRate %>%</p>
+            </div>
+            <div class="stat-box">
+                <h3>Avg Hold</h3>
+                <p><%= formatDuration(stats.avgTradeTime) %></p>
+            </div>
+            <div class="stat-box">
+                <h3>R:R</h3>
+                <p><%= stats.rr %></p>
+            </div>
+        </div>
+
+        <div class="filters">
+            <select id="yearFilter">
+                <option value="">All Years</option>
+                <% years.forEach(year => { %>
+                    <option value="<%= year %>" 
+                        <%= filters.year == year ? 'selected' : '' %>><%= year %></option>
+                <% }) %>
+            </select>
+
+            <select id="pairFilter">
+                <option value="">All Pairs</option>
+                <% pairs.forEach(pair => { %>
+                    <option value="<%= pair %>"
+                        <%= filters.pair === pair ? 'selected' : '' %>><%= pair %></option>
+                <% }) %>
+            </select>
+        </div>
+    </section>
+
+    <section class="trades-section">
+        <h2>Trade History</h2>
+        <div class="table-container">
+            <table class="trades-table">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class="th-content">
+                                Pair
+                                <input type="text" class="column-filter" data-column="pair" placeholder="Filter pair...">
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th-content">
+                                Type
+                                <select class="column-filter" data-column="type">
+                                    <option value="">All</option>
+                                    <option value="BUY">BUY</option>
+                                    <option value="SELL">SELL</option>
+                                </select>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th-content">
+                                Trend
+                                <select class="column-filter" data-column="trend">
+                                    <option value="">All</option>
+                                    <option value="Follow">Follow</option>
+                                    <option value="Against">Against</option>
+                                </select>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th-content">
+                                Outcome
+                                <select class="column-filter" data-column="outcome">
+                                    <option value="">All</option>
+                                    <option value="TP">TP</option>
+                                    <option value="SL">SL</option>
+                                    <option value="BE">BE</option>
+                                </select>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th-content">
+                                Open Date/Time
+                                <input type="datetime-local" class="column-filter" data-column="openTime">
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th-content">
+                                Close Date/Time
+                                <input type="datetime-local" class="column-filter" data-column="closeTime">
+                            </div>
+                        </th>
+                        <th>Hold</th>
+                        <th>Setup</th>
+                        <th>Notes</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% trades.reverse().forEach(trade => { %>
+                        <tr class="trade-row <%= trade.outcome.toLowerCase() %>">
+                            <td><%= trade.currencyPair %></td>
+                            <td><%= trade.tradeType %></td>
+                            <td><%= trade.trend %></td>
+                            <td>
+                                <%= trade.outcome %>
+                                <% if (trade.outcome === 'BE' && trade.potentialOutcome) { %>
+                                    (<%= trade.potentialOutcome %>)
+                                <% } %>
+                            </td>
+                            <td><%= new Date(trade.openTime).toLocaleString() %></td>
+                            <td><%= new Date(trade.closeTime).toLocaleString() %></td>
+                            <td>
+                                <%
+                                    const openTime = new Date(trade.openTime);
+                                    const closeTime = new Date(trade.closeTime);
+                                    const durationMinutes = (closeTime - openTime) / (1000 * 60);
+                                %>
+                                <%= formatDuration(durationMinutes) %>
+                            </td>
+                            <td>
+                                <% if (trade.setupUrl) { %>
+                                    <a href="<%= trade.setupUrl %>" target="_blank">View</a>
+                                <% } %>
+                            </td>
+                            <td><%= trade.notes %></td>
+                            <td>
+                                <a href="/entries/<%= trade.id %>/edit" class="edit-btn">Edit</a>
+                                <button class="delete-btn" data-id="<%= trade.id %>">Delete</button>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+<%- include('partials/footer') %> 

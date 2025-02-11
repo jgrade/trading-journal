@@ -1,0 +1,23 @@
+trading-journal/
+├── public/
+│   ├── css/
+│   │   └── style.css
+│   └── js/
+│       └── main.js
+├── views/
+│   ├── partials/
+│   │   ├── header.ejs
+│   │   └── footer.ejs
+│   ├── dashboard.ejs
+│   ├── entry-form.ejs
+│   └── entries-list.ejs
+├── data/
+│   └── trades.json
+├── routes/
+│   ├── dashboard.js
+│   └── entries.js
+├── utils/
+│   ├── tradeManager.js
+│   └── statistics.js
+├── app.js
+└── package.json 

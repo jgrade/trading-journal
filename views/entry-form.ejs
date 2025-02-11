@@ -1,0 +1,85 @@
+<%- include('partials/header') %>
+
+<div class="entry-form">
+    <h2><%= trade ? 'Edit Trade' : 'New Trade Entry' %></h2>
+    
+    <% if (typeof error !== 'undefined') { %>
+        <div class="error-message"><%= error %></div>
+    <% } %>
+
+    <form action="<%= trade ? `/entries/${trade.id}` : '/entries' %>" method="POST">
+        <div class="form-group">
+            <label for="currencyPair">Currency Pair</label>
+            <input type="text" id="currencyPair" name="currencyPair" required
+                value="<%= trade ? trade.currencyPair : '' %>"
+                pattern="[A-Za-z]{3}/[A-Za-z]{3}"
+                placeholder="EUR/USD">
+        </div>
+
+        <div class="form-group">
+            <label for="tradeType">Trade Type</label>
+            <select id="tradeType" name="tradeType" required>
+                <option value="">Select Type</option>
+                <option value="BUY" <%= trade && trade.tradeType === 'BUY' ? 'selected' : '' %>>BUY</option>
+                <option value="SELL" <%= trade && trade.tradeType === 'SELL' ? 'selected' : '' %>>SELL</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="openTime">Open Time</label>
+            <input type="datetime-local" id="openTime" name="openTime" required
+                value="<%= trade ? trade.openTime.slice(0, 16) : '' %>">
+        </div>
+
+        <div class="form-group">
+            <label for="closeTime">Close Time</label>
+            <input type="datetime-local" id="closeTime" name="closeTime" required
+                value="<%= trade ? trade.closeTime.slice(0, 16) : '' %>">
+        </div>
+
+        <div class="form-group">
+            <label for="outcome">Outcome</label>
+            <select id="outcome" name="outcome" required>
+                <option value="">Select Outcome</option>
+                <option value="TP" <%= trade && trade.outcome === 'TP' ? 'selected' : '' %>>TP</option>
+                <option value="SL" <%= trade && trade.outcome === 'SL' ? 'selected' : '' %>>SL</option>
+                <option value="BE" <%= trade && trade.outcome === 'BE' ? 'selected' : '' %>>BE</option>
+            </select>
+        </div>
+
+        <div class="form-group potential-outcome" style="display: none;">
+            <label for="potentialOutcome">Would this have been?</label>
+            <select id="potentialOutcome" name="potentialOutcome">
+                <option value="TP" <%= trade && trade.potentialOutcome === 'TP' ? 'selected' : '' %>>TP</option>
+                <option value="SL" <%= trade && trade.potentialOutcome === 'SL' ? 'selected' : '' %>>SL</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="setupUrl">Setup URL</label>
+            <input type="url" id="setupUrl" name="setupUrl"
+                value="<%= trade ? trade.setupUrl : '' %>"
+                placeholder="https://example.com/trade-setup">
+        </div>
+
+        <div class="form-group">
+            <label for="notes">Notes</label>
+            <textarea id="notes" name="notes" rows="4"><%= trade ? trade.notes : '' %></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="trend">Trend</label>
+            <select id="trend" name="trend" required>
+                <option value="">Select Trend</option>
+                <option value="Follow" <%= trade && trade.trend === 'Follow' ? 'selected' : '' %>>Follow</option>
+                <option value="Against" <%= trade && trade.trend === 'Against' ? 'selected' : '' %>>Against</option>
+            </select>
+        </div>
+
+        <button type="submit" class="submit-btn">
+            <%= trade ? 'Update Trade' : 'Add Trade' %>
+        </button>
+    </form>
+</div>
+
+<%- include('partials/footer') %> 

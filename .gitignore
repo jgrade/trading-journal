@@ -1,0 +1,11 @@
+node_modules/
+# Exclude local data 
+data/trades.json
+# Mac specific
+.DS_Store
+# Environment variables
+.env
+# Log files
+*.log
+# Temporary files
+*.tmp
