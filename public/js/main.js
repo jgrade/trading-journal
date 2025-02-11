@@ -118,4 +118,29 @@ document.addEventListener('DOMContentLoaded', function() {
     columnFilters.forEach(filter => {
         filter.addEventListener('input', filterTable);
     });
+
+    // Sorting functionality
+    let sortDirection = 1; // 1 for ascending, -1 for descending
+    
+    document.querySelector('th[data-sort="number"]').addEventListener('click', function() {
+        const tbody = document.querySelector('.trades-table tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        
+        // Toggle sort direction
+        sortDirection *= -1;
+        
+        // Update sort icon
+        const sortIcon = this.querySelector('.sort-icon');
+        sortIcon.textContent = sortDirection === 1 ? '⇅' : '⇅';
+        
+        // Sort rows
+        rows.sort((a, b) => {
+            const aValue = parseInt(a.cells[0].textContent);
+            const bValue = parseInt(b.cells[0].textContent);
+            return (aValue - bValue) * sortDirection;
+        });
+        
+        // Reorder rows in the table
+        rows.forEach(row => tbody.appendChild(row));
+    });
 }); 

@@ -83,6 +83,12 @@
             <table class="trades-table">
                 <thead>
                     <tr>
+                        <th class="sortable" data-sort="number">
+                            <div class="th-content">
+                                #
+                                <span class="sort-icon">⇅</span>
+                            </div>
+                        </th>
                         <th>
                             <div class="th-content">
                                 Pair
@@ -139,8 +145,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% trades.reverse().forEach(trade => { %>
+                    <% trades.reverse().forEach((trade, index) => { %>
                         <tr class="trade-row <%= trade.outcome.toLowerCase() %>">
+                            <td><%= trades.length - index %></td>
                             <td><%= trade.currencyPair %></td>
                             <td><%= trade.tradeType %></td>
                             <td><%= trade.trend %></td>

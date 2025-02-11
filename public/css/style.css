@@ -174,6 +174,35 @@ main {
     font-weight: 500;
 }
 
+.trades-table td:first-child {  /* Trade number column */
+    text-align: center;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.trades-table th:first-child {
+    text-align: center;
+}
+
+.sortable {
+    cursor: pointer;
+    user-select: none;
+}
+
+.sortable:hover {
+    background-color: #eee;
+}
+
+.sort-icon {
+    display: inline-block;
+    margin-left: 4px;
+    color: #666;
+}
+
+.sortable:hover .sort-icon {
+    color: var(--primary-color);
+}
+
 .edit-btn,
 .delete-btn {
     padding: 0.25rem 0.5rem;

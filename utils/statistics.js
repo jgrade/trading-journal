@@ -69,15 +69,20 @@ class Statistics {
 
     // Helper function to format time duration
     formatDuration(minutes) {
-        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(minutes / (60 * 24));
+        const hours = Math.floor((minutes % (60 * 24)) / 60);
         const remainingMinutes = Math.round(minutes % 60);
         
-        if (hours === 0) {
+        if (days === 0 && hours === 0) {
             return `${remainingMinutes}m`;
+        } else if (days === 0) {
+            return remainingMinutes === 0 ? `${hours}h` : `${hours}h ${remainingMinutes}m`;
+        } else if (hours === 0 && remainingMinutes === 0) {
+            return `${days}d`;
         } else if (remainingMinutes === 0) {
-            return `${hours}h`;
+            return `${days}d ${hours}h`;
         } else {
-            return `${hours}h ${remainingMinutes}m`;
+            return `${days}d ${hours}h ${remainingMinutes}m`;
         }
     }
 }
